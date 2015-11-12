@@ -10,6 +10,8 @@ other features, such as frequency measurements are taken.
 
 # Problem Statement
 
+## Description
+
 It is entirely reasonable that due to different circumstances concerning the monitors, that they 
 would malfunction at different times. 
 
@@ -21,18 +23,39 @@ resources, ideally a service-person would only be sent when there are enough mon
 so that all supplies in the vehicle would be used. Also, there are two monitoring station networks, 
 where each network has monitors which malfunction with a different probability.
 
+## Graph Generation
+
+We are assuming that the monitor sites form a connected graph, where the edges are the 
+Euclidean distance between the latitude-longitude coordinates. 
+
+
+## Discrete event simulation
+
 Then, we have a discrete event simulation, where each monitor randomly malfunctions at each time 
 step. Workers are dispatched whenever five monitors are malfunctioning. Dijkstra's algorithm is 
 used to identify the shortest path which the service-person would use (this is a rough heuristic 
-ignoring complications such as roads). Time-permitting, perhaps 
+ignoring complications such as roads).
 
-Possible additions: 
+Traversing an edge (en route to repairing a monitor) should be proportional to the edge length, and 
+repairing a monnitor should take constant time. 
+
+## Possible additions: 
 
 * Assuming the monitor networks aren't completely connected graphs
 * Implementing a parallel implementation of Dijkstra's algorithm, can be implemented as well, like if we increase probabilities of malfunction.
 
 
-# Goal
+## Execution
+
+The executable takes three different arguments. One is a text file containing site names, long/lat coordinates, 
+and network name. The next two are, respectively, the probabilities that monitors in each network malfunction 
+at each timestep.
+
+```
+repairmonits sitenames.txt 0.05 0.02
+```
+
+## Report
 
 Analyze average waiting times from when a monitor site first malfunctions to when it is fixed. 
 Provide recommendations/prescriptions on how to facilitate faster repair times for different sites.
