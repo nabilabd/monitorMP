@@ -24,7 +24,7 @@ There are two parts to this assignment.
 2. Implementing parallel Dijkstra's algorithm with openMP, and comparing Dijkstra's against an alternative shortest-path algorithm
 
 
-## Graph Generation and Resource Analysis
+## Graph Generation and Discrete event simulation
 
 We are assuming that the machine network consists of sites which form a connected graph. The edges have 
 lengths equal to Euclidean distance between the latitude-longitude coordinates. One partner generates 
@@ -34,7 +34,8 @@ programs for further analysis.
 Additionally, this partner can implement event handlers, that schedule for events to happen based on 
 when a machine malfunctions. In particular, a technician is deployed to fix the error-ridden machine. 
 To do so, he uses a certain amount of resources (e.g., fuel, money for expenses) along the way, and his 
-traveling to the machine is directly proportional to the distance from the base where he was sent from.
+traveling to the machine is directly proportional to the distance from the base where he was sent from. To 
+find the shortest path, the Dijkstra's algorithm code from the previous assignment can be used.
 
 This partner can conduct an analysis, by calculating through simulations, where he examines how the numbers of 
 malfunctioning equipment grows as the number of technicians and the parameter of the survival function, vary. 
@@ -45,31 +46,28 @@ financial) need to be allocated to ensure the network's percentage of functionin
 a certain threshold.
 
 
-## Discrete event simulation
+## Algorithm Comparison/Analysis
 
-Then, we have a discrete event simulation, where each monitor randomly malfunctions according to 
-an exponential distribution (the machines' survival function). After being repaired, a new 
-lifetime of functioning properly before malfunctioning again, is calculated.
+The second partner would focus on writing algorithms, to compare their performance and influence on 
+the questions proposed earlier (that the other partner would also be working to answer). 
 
-
-Workers are dispatched whenever five monitors are malfunctioning. Dijkstra's algorithm is 
-used to identify the shortest path which the service-person would use (this is a rough heuristic 
-ignoring complications such as roads).
-
-Traversing an edge (en route to repairing a monitor) should be proportional to the edge length, and 
-repairing a monnitor should take constant time. 
+Specifically, this second partner can program a parallel implementation of Dijkstra's algorithm with OpenMP. 
+To compare against these two versions of Dijkstra's algorithm, he can also implement an alternative shortest-path 
+algorithm, and (perhaps) code that up in parallel as well. Then he would be providing three different algorithms 
+which can each be used to examine how their use affects the aforementioned questions.
+ 
 
 ## Possible additions: 
 
-* Assuming the monitor networks aren't completely connected graphs
-* Implementing a parallel implementation of Dijkstra's algorithm, can be implemented as well, like if we increase probabilities of malfunction.
+* Assuming the monitor networks aren't completely connected graphs, but perhaps (e.g.) two connected components
+* Assuming the network of machines actually consists of two kinds of machines, where each has a separate survival 
+function (and so, different exponential distributions modelling expected lifetime before the next malfunction)
 
 
 ## Execution
 
 The executable takes three different arguments. One is a text file containing site names, long/lat coordinates, 
-and network name. The next two are, respectively, the probabilities that monitors in each network malfunction 
-at each timestep.
+and network name. The next is the parameter of the exponential distribution for the survival function of the monitors:
 
 ```
 repairmonits sitenames.txt 0.05 0.02
@@ -77,7 +75,7 @@ repairmonits sitenames.txt 0.05 0.02
 
 ## Report
 
-Analyze average waiting times from when a monitor site first malfunctions to when it is fixed. 
+Analyze average durations for how much time passes between machine failure and its repair. 
 Provide recommendations/prescriptions on how to facilitate faster repair times for different sites.
 
 
