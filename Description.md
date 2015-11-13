@@ -11,7 +11,6 @@ Suppose further that this technician can only travel along the routes directly c
 
 Then, there are a number of questions of interest, such as: 
 * What is the optimal number of technicians to have on reserve to minimize the number of malfunctions at any given moment? 
-* When should a technician be dispatched for most efficient use of resources (e.g., fuel for travel, etc)?
 
 
 # Problem Statement
@@ -44,7 +43,6 @@ That is, with a given number of technicians, does the number of malfunctioning m
 approximately level, or decreases and remains small over time? Then we can see whether more resources (e.g., human or 
 financial) need to be allocated to ensure the network's percentage of functioning machines is maintained above 
 a certain threshold.
-
 
 
 ## Discrete event simulation
