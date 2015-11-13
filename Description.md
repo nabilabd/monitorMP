@@ -19,7 +19,9 @@ Then, there are a number of questions of interest, such as:
 ## Description
 
 There are two parts to this assignment. 
+
 1. Graph Generation and Resource Analysis using Dijkstra's algorithm
+
 2. Implementing parallel Dijkstra's algorithm with openMP, and comparing Dijkstra's against an alternative shortest-path algorithm
 
 
