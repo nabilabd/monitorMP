@@ -5,7 +5,7 @@
 Team Members: Nabil Abdurehman, Henry Huray
 
 Suppose you have a network of machines located at various places across the US. Occasionally, these 
-machines might malfunction, in which case a service-person would have to be dispatched 
+machines might malfunction, in which case a technician would have to be dispatched 
 to repair the device. Each device functions properly with a lifetime given by an exponential distribution.
 Suppose further that this technician can only travel along the routes directly connecting two such machines. 
 
@@ -55,7 +55,7 @@ Specifically, this second partner can program a parallel implementation of Dijks
 To compare against these two versions of Dijkstra's algorithm, he can also implement an alternative shortest-path 
 algorithm, and (perhaps) code that up in parallel as well. Then he would be providing three different algorithms 
 which can each be used to examine how their use affects the aforementioned questions.
- 
+
 
 ## Possible additions: 
 
@@ -66,18 +66,22 @@ function (and so, different exponential distributions modelling expected lifetim
 
 ## Execution
 
-The executable takes three different arguments. One is a text file containing site names, long/lat coordinates, 
-and network name. The next is the parameter of the exponential distribution for the survival function of the monitors:
+The executable takes four different arguments. The first argument is a text file containing site names, long/lat coordinates, 
+and network name. The next is the parameter of the exponential distribution for the survival function of the monitors.
+The third parameter is the number of technicians servicing the network. The last parameter is the amount of time that
+the program runs for:
 
 ```
-repairmonits sitenames.txt 0.05 0.02
+repairmonits sitenames.txt 0.05 3 10000
 ```
+
+The execution will produce a log of all events and the machine network average waiting time for the simulation.
 
 ## Report
 
-Analyze average durations for how much time passes between machine failure and its repair. 
-Provide recommendations/prescriptions on how to facilitate faster repair times for different sites.
-
-
+The report will include analysis on the average waiting time of the simulation for different combinations of command line arguments.
+Based on the analysis, we aim to provide recommendations to optimize resources allocation. Additionally, the report will also contain
+the shortest-path algorithm analysis, where the performances of different algorithms are compared and how parallel computing improves the
+running times of these algorithms.
 
 
