@@ -2,37 +2,57 @@
 
 # Introduction
 
-There are many monitoring locations across the US. They take measurements of various chemicals and 
-air pollutants at ground level of the atmosphere. Now, there are different networks of monitoring 
-locations, which vary in the characteristics of the vicinity where they're placed as well as 
-other features, such as frequency measurements are taken. 
+Team Members: Nabil Abdurehman, Henry Huray
+
+Suppose you have a network of machines located at various places across the US. Occasionally, these 
+machines might malfunction, in which case a service-person would have to be dispatched 
+to repair the device. Each device functions properly with a lifetime given by an exponential distribution.
+Suppose further that this technician can only travel along the routes directly connecting two such machines. 
+
+Then, there are a number of questions of interest, such as: 
+* What is the optimal number of technicians to have on reserve to minimize the number of malfunctions at any given moment? 
+* When should a technician be dispatched for most efficient use of resources (e.g., fuel for travel, etc)?
 
 
 # Problem Statement
 
 ## Description
 
-It is entirely reasonable that due to different circumstances concerning the monitors, that they 
-would malfunction at different times. 
+There are two parts to this assignment. 
+1. Graph Generation and Resource Analysis using Dijkstra's algorithm
+2. Implementing parallel Dijkstra's algorithm with openMP, and comparing Dijkstra's against an alternative shortest-path algorithm
 
-Suppose for each monitor in a given network, there was a probability with which the monitor 
-malfunctioned at each time step. And that to fix a monitor, it requires manual attention by 
-a service-person who would visit the site. Assume the vehicles deployed to service a monitor 
-can carry supplies enough to service five monitors. Then, to avoid redundancy and conserve 
-resources, ideally a service-person would only be sent when there are enough monitors to fix 
-so that all supplies in the vehicle would be used. Also, there are two monitoring station networks, 
-where each network has monitors which malfunction with a different probability.
 
-## Graph Generation
+## Graph Generation and Resource Analysis
 
-We are assuming that the monitor sites form a connected graph, where the edges are the 
-Euclidean distance between the latitude-longitude coordinates. 
+We are assuming that the machine network consists of sites which form a connected graph. The edges have 
+lengths equal to Euclidean distance between the latitude-longitude coordinates. One partner generates 
+this connected graph with the edge lengths, and outputs that as a text file, which can be read into other 
+programs for further analysis.
+
+Additionally, this partner can implement event handlers, that schedule for events to happen based on 
+when a machine malfunctions. In particular, a technician is deployed to fix the error-ridden machine. 
+To do so, he uses a certain amount of resources (e.g., fuel, money for expenses) along the way, and his 
+traveling to the machine is directly proportional to the distance from the base where he was sent from.
+
+This partner can conduct an analysis, by calculating through simulations, where he examines how the numbers of 
+malfunctioning equipment grows as the number of technicians and the parameter of the survival function, vary. 
+
+That is, with a given number of technicians, does the number of malfunctioning machines grow over time, or remains 
+approximately level, or decreases and remains small over time? Then we can see whether more resources (e.g., human or 
+financial) need to be allocated to ensure the network's percentage of functioning machines is maintained above 
+a certain threshold.
+
 
 
 ## Discrete event simulation
 
-Then, we have a discrete event simulation, where each monitor randomly malfunctions at each time 
-step. Workers are dispatched whenever five monitors are malfunctioning. Dijkstra's algorithm is 
+Then, we have a discrete event simulation, where each monitor randomly malfunctions according to 
+an exponential distribution (the machines' survival function). After being repaired, a new 
+lifetime of functioning properly before malfunctioning again, is calculated.
+
+
+Workers are dispatched whenever five monitors are malfunctioning. Dijkstra's algorithm is 
 used to identify the shortest path which the service-person would use (this is a rough heuristic 
 ignoring complications such as roads).
 
