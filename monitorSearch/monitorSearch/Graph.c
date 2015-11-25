@@ -15,6 +15,8 @@ typedef struct ALElement {
     unsigned from;
     unsigned to;
     
+    double weight; // weight of the edge connecting "from" and "to"
+    
     struct ALElement *next;
     
 } ALElement;
@@ -124,5 +126,11 @@ int neigh_done (Graph *g) {
 size_t getNumNodes(Graph *g) {
     return g->numNodes;
 }
+
+
+double getWeight(Graph *g) {
+    return g->iter->weight;
+}
+
 
 

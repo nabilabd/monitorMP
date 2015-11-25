@@ -95,8 +95,10 @@ unsigned neigh_next (Graph *g);
 int neigh_done (Graph *g);
 
 
-
-
+/*
+ * Returns the weight of the edge currently accessed
+ */
+double getWeight(Graph *g);
 
 
 
