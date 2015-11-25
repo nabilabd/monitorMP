@@ -49,11 +49,11 @@ double *bellmanFord(Graph *g, size_t source) {
     
     // loop over vertices and edges, updating distances until no longer possible
     
-    for (size_t vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
+    for (unsigned vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
 
         for (size_t vertex2ID = vertex1ID+1 ; vertex2ID < numNodes; vertex2ID++) {
             
-            size_t currentID;
+            unsigned currentID;
             for (currentID = neigh_first(g, vertex1ID); !neigh_done(g); neigh_next(g)) {
                 
                 // this condition ensures only single edge checked
