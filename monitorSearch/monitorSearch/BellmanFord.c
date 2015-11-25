@@ -26,6 +26,10 @@ typedef struct MetaNode {
 void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID);
 
 
+
+void Relax(MetaNode** arr, size_t u, size_t v, double w);
+
+
 /* 
  * 
  * @param g the Graph containing the node network
@@ -44,6 +48,24 @@ double *bellmanFord(Graph *g, size_t source) {
     
     
     // loop over vertices and edges, updating distances until no longer possible
+    
+    for (size_t vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
+
+        for (size_t vertex2ID = vertex1ID+1 ; vertex2ID < numNodes; vertex2ID++) {
+            
+            size_t currentID;
+            for (currentID = neigh_first(g, vertex1ID); !neigh_done(g); neigh_next(g)) {
+                
+                // this condition ensures only single edge checked
+                // TODO: change graph structure to avoid wasted space
+                if (currentID >= vertex2ID) {
+                    Relax(holder, vertex1ID, currentID, getWeight(g));
+                    Relax(holder, currentID, vertex1ID, getWeight(g));
+                }
+                
+            }
+        }
+    }
     
     
     
