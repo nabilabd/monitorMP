@@ -43,6 +43,16 @@ void freeGraph(Graph *g);
 void addEdge(Graph* g, unsigned from, unsigned to);
 
 
+
+
+/*
+ * Same as addEdge, except allows for weighted edges
+ *
+ * @param wt weight of the edge connecting "from" and "to"
+ */
+void addWtdEdge(Graph* g, unsigned from, unsigned to, double wt);
+
+
 /*
  * Get the number of nodes in the graph.
  *

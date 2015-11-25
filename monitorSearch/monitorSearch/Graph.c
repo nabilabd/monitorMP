@@ -86,6 +86,34 @@ void addEdge(Graph *g, unsigned from, unsigned to) {
 }
 
 
+
+
+
+void addWtdEdge(Graph* g, unsigned from, unsigned to, double wt) {
+    
+    ALElement* e = malloc(sizeof(ALElement));
+    e->from = from;
+    e->to = to;
+    e->next = NULL;
+    e->weight = wt;
+    
+    if (g->adjList[from] == NULL)
+        g->adjList[from] = e;
+    else {
+        ALElement *p = g->adjList[from];
+        
+        // add to front of list
+        e->next = p;
+        g->adjList[from] = e;
+    }
+    
+}
+
+
+
+
+
+
 // iterator methods
 unsigned neigh_first (Graph *g, unsigned from) {
     
