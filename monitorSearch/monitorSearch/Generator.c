@@ -25,7 +25,7 @@ int main(int argc, const char * argv[]) {
         return 0;
     }
 
-    srand(time(NULL));
+    srand( (unsigned int) time(NULL));
     
     // parse input
     size_t numNodes = (size_t) strtoul (argv[1], NULL, 10);     // num nodes

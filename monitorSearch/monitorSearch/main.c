@@ -33,19 +33,19 @@ void readGraph(char const *filename) {
     
     FILE *fp = fopen(filename, "r");
     
-    int numEdges;
+//    int numEdges;
     double weight;
     size_t numNodes;
     unsigned fromVertex, toVertex;
     
     fscanf(fp, "%zd", &numNodes);
-    fscanf(fp, "%d", &numEdges);
+//    fscanf(fp, "%d", &numEdges);
     
     Graph *myGraph = makeGraph(numNodes);
     
     
     // Associate with each vertex, a list of vertices it is connected to
-    for (int k = 0; k < numEdges; k++) {
+    for (size_t k = 0; k < numNodes; k++) {
         
         fscanf(fp, "%zd:", &fromVertex);
         fscanf(fp, "%zd:", &toVertex);
