@@ -6,17 +6,15 @@
 //  Copyright © 2015 Nabil Abdurehman. All rights reserved.
 //
 
-#include <stdio.h>
-#include "Graph.h"
-
+#include "BellmanFord.h"
 
 // function to read in a graph
-void readGraph(char const *filename);
+Graph *readGraph(char const *filename);
 
 
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
+    // insert code here... 
     printf("Hello, World!\n");
     return 0;
 }
@@ -29,7 +27,7 @@ int main(int argc, const char * argv[]) {
  *
  * @param filename name of file containing graph to be read
  */
-void readGraph(char const *filename) {
+Graph *readGraph(char const *filename) {
     
     FILE *fp = fopen(filename, "r");
     
@@ -55,7 +53,7 @@ void readGraph(char const *filename) {
         
     }
     
-    
+    return myGraph;
 }
 
 
