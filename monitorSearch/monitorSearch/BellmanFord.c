@@ -6,28 +6,50 @@
 //  Copyright © 2015 Nabil Abdurehman. All rights reserved.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "Graph.h"
-#include "FIFOQueue.h"
-
-// read the graph
 
 
-typedef struct MetaNode {
+#include "BellmanFord.h"
+
+
+/*
+ *
+ *
+ * @param arr the array containing metadata for shortest-path route
+ * @param size size of the graph (i.e., number of nodes in it)
+ */
+void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID) {
     
-    size_t predecessor;
-    double DistToSource;
+    MetaNode* sourceNode = arr[sourceID];
+    sourceNode->predecessor = (size_t) NULL;
+    sourceNode->DistToSource = 0;
     
-} MetaNode;
+    for (size_t k = 0; k < size && k != sourceID; k++) {
+        MetaNode* currentNode = arr[k];
+        currentNode->DistToSource = INT64_MAX;
+        currentNode->predecessor = (size_t) NULL;
+    }
+    
+}
 
 
-// initialize graph for B-F algorithm
-void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID);
 
-
-
-void Relax(MetaNode** arr, size_t u, size_t v, double w);
+/*
+ * Relaxes the edge if a shorter path can be found
+ *
+ * @param u,v vertices in the graph
+ * @param w weight of edge u-v
+ */
+void Relax(MetaNode** arr, size_t u, size_t v, double w) {
+    
+    MetaNode* vertU = arr[u];
+    MetaNode* vertV = arr[v];
+    
+    if (vertU->DistToSource + w < vertV->DistToSource) {
+        vertV->predecessor = u;
+        vertV->DistToSource = vertU->DistToSource + w;
+    }
+    
+}
 
 
 /* 
@@ -75,49 +97,6 @@ double *bellmanFord(Graph *g, size_t source) {
     
     return 0;
 }
-
-
-/*
- *
- *
- * @param arr the array containing metadata for shortest-path route
- * @param size size of the graph (i.e., number of nodes in it)
- */
-void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID) {
-    
-    MetaNode* sourceNode = arr[sourceID];
-    sourceNode->predecessor = (size_t) NULL;
-    sourceNode->DistToSource = 0;
-    
-    for (size_t k = 0; k < size && k != sourceID; k++) {
-        MetaNode* currentNode = arr[k];
-        currentNode->DistToSource = INT64_MAX;
-        currentNode->predecessor = (size_t) NULL;
-    }
-    
-}
-
-
-
-/*
- * Relaxes the edge if a shorter path can be found
- *
- * @param u,v vertices in the graph
- * @param w weight of edge u-v
- */
-void Relax(MetaNode** arr, size_t u, size_t v, double w) {
-    
-    MetaNode* vertU = arr[u];
-    MetaNode* vertV = arr[v];
-    
-    if (vertU->DistToSource + w < vertV->DistToSource) {
-        vertV->predecessor = u;
-        vertV->DistToSource = vertU->DistToSource + w;
-    }
-    
-}
-
-
 
 
 
