@@ -52,6 +52,8 @@ Graph* makeGraph(size_t numNodes) {
 }
 
 void freeGraph(Graph *g) {
+    
+    // free the graph, one step at a time
     for (size_t n = 0; n < g->numNodes; n++) {
         ALElement* p = g->adjList[n];
         
