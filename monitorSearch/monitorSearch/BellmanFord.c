@@ -80,7 +80,9 @@ void Relax(MetaNode** arr, size_t u, size_t v, double w) {
     
 }
 
-
+/* 
+ * Print array of metadata
+ */
 void print_holder(MetaNode** holder, size_t length) {
     
     for (size_t k = 0; k < length; k++) {
@@ -91,6 +93,9 @@ void print_holder(MetaNode** holder, size_t length) {
     }
     
 }
+
+
+
 
 
 
