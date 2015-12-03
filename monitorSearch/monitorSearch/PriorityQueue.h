@@ -23,7 +23,7 @@ typedef struct PriorityQueue PriorityQueue;
  *
  * @return a pointer to the priority queue.
  */
-PriorityQueue* pq_create();
+PriorityQueue* pq_make();
 
 /*
  * Push an element with a given priority into the queue.

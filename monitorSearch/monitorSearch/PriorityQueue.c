@@ -30,10 +30,10 @@ struct PriorityQueue {
 };
 
 
-// create an empty priority queue
-PriorityQueue* pq_create() {
+// make an empty priority queue
+PriorityQueue* pq_make() {
     PriorityQueue *pq = (PriorityQueue *) malloc(sizeof(PriorityQueue));
-    if (pq == NULL) FatalError("pq_create", "Could not allocate memory.");
+    if (pq == NULL) FatalError("pq_make", "Could not allocate memory.");
     
     pq->head = NULL;
     pq->tail = NULL;
@@ -50,7 +50,7 @@ void pq_push(PriorityQueue *pq, double priority, void *data) {
     if (pq == NULL)
         return;
     
-    // create a new element with the given data and priority
+    // make a new element with the given data and priority
     PQElement *r = (PQElement *) malloc(sizeof(PQElement));
     if (r == NULL) FatalError("pq_push", "Could not allocate memory.");
     
