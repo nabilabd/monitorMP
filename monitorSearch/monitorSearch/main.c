@@ -23,9 +23,7 @@ int main(int argc, const char * argv[]) {
     
     
     char const *graph_file = argv[1];
-    printf(&graph_file[0]);
-    printf("\n\n");
-    
+
     Graph* graph = readGraph(graph_file);
     freeGraph(graph);
     
@@ -46,19 +44,17 @@ Graph *readGraph(char const *filename) {
     FILE *fp = fopen(filename, "r");
     
     float weight;
-    size_t numNodes;
+    size_t numberOfNodes;
     unsigned fromVertex, toVertex;
     
-    fscanf(fp, "%zu", &numNodes);
-    printf("Number of nodes is %zu\n", numNodes);
-    printf("Working here.\n");
+    fscanf(fp, "%zu", &numberOfNodes);
+//    printf("Number of nodes is %zu\n", numNodes);
     
     
-    Graph *myGraph = makeGraph(numNodes);
-    printf("Working so far.\n");
+    Graph *myGraph = makeGraph(numberOfNodes);
     
     // Associate with each vertex, a list of vertices it is connected to
-    for (size_t k = 0; k < numNodes; k++) {
+    for (size_t k = 0; k < numberOfNodes; k++) {
         
         fscanf(fp, "%u:", &fromVertex);
         fscanf(fp, "%u:", &toVertex);
