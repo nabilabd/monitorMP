@@ -26,6 +26,18 @@ int main(int argc, const char * argv[]) {
     char const *graph_file = argv[1];
 
     Graph* graph = readGraph(graph_file);
+    size_t graphSize = getNumNodes(graph);
+    print_graph(graph);
+    
+    
+    MetaNode** myArray = make_array( graphSize );
+    InitializeSingleSource(myArray, graphSize, 5);
+    
+    
+    double mindist = bellmanFord(graph, 0, 3, graphSize, myArray);
+    printf("Bellman-Ford min distance is: %f\n", mindist);
+    
+    
     freeGraph(graph);
     
     printf("Hello, World!\n");
