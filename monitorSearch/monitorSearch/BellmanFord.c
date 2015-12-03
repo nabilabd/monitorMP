@@ -11,6 +11,19 @@
 #include "BellmanFord.h"
 
 
+
+MetaNode** make_array(size_t numNodes) {
+    
+    MetaNode** my_array = malloc(sizeof(MetaNode*) * numNodes);
+    for (size_t m = 0; m < numNodes; m++) {
+        my_array[m] = (MetaNode*) malloc(sizeof(MetaNode));
+        my_array[m] = NULL;
+    }
+    
+    return my_array;
+}
+
+
 /*
  *
  *
