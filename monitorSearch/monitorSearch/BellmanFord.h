@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Graph.h"
-#include "PriorityQueue.h"
 
 typedef struct MetaNode {
     
@@ -24,6 +23,7 @@ typedef struct MetaNode {
 
 
 MetaNode** make_array(size_t numNodes);
+
 
 void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID);
 

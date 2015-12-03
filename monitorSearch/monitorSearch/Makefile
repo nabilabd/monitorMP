@@ -4,7 +4,7 @@
 # SOURCES should include all the .c files in your project (do not include .h)
 
 EXECUTABLE=analyzer
-SOURCES=main.c BellmanFord.c Common.c PriorityQueue.c Graph.c
+SOURCES=main.c BellmanFord.c Common.c Graph.c
 
 CC=gcc-5
 CFLAGS=-c -Wall -lm -g
