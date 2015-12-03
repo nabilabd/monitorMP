@@ -125,7 +125,7 @@ double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNo
         
         // NB: by specification, always have that vertex2ID < vertex1ID
             unsigned vertex2ID;
-            for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); neigh_next(g)) {
+            for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); vertex2ID = neigh_next(g)) {
                 
                 Relax(holder, vertex1ID, vertex2ID, getWeight(g));
                 Relax(holder, vertex2ID, vertex1ID, getWeight(g));
