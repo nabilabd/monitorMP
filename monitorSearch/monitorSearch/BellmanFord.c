@@ -16,12 +16,24 @@ MetaNode** make_array(size_t numNodes) {
     
     MetaNode** my_array = malloc(sizeof(MetaNode*) * numNodes);
     for (size_t m = 0; m < numNodes; m++) {
-        my_array[m] = (MetaNode*) malloc(sizeof(MetaNode));
         my_array[m] = NULL;
     }
     
     return my_array;
 }
+
+/*
+ * Generates a non-source node
+ *
+ */
+MetaNode* genNonSource() {
+    MetaNode* currentNode = (MetaNode*) malloc(sizeof(MetaNode));
+    currentNode->DistToSource = INT64_MAX;
+    currentNode->predecessor = (size_t) NULL;
+    
+    return currentNode;
+}
+
 
 
 /*
@@ -32,18 +44,16 @@ MetaNode** make_array(size_t numNodes) {
  */
 void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID) {
     
-    MetaNode* sourceNode = arr[sourceID];
+    MetaNode* sourceNode = (MetaNode*) malloc(sizeof(MetaNode));
     sourceNode->predecessor = (size_t) NULL;
     sourceNode->DistToSource = 0;
+    arr[sourceID] = sourceNode;
     
     for (size_t k = 0; k < size && k != sourceID; k++) {
-        MetaNode* currentNode = arr[k];
-        currentNode->DistToSource = INT64_MAX;
-        currentNode->predecessor = (size_t) NULL;
+        arr[k] = genNonSource();
     }
     
 }
-
 
 
 /*

@@ -23,9 +23,9 @@ typedef struct MetaNode {
 
 
 
+MetaNode** make_array(size_t numNodes);
 
 void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID);
-
 
 
 void Relax(MetaNode** arr, size_t u, size_t v, double w);
