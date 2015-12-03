@@ -10,6 +10,10 @@
 
 #include "BellmanFord.h"
 
+// IDEA: don't export "Relax", "Initialize", and move definition of
+// MetaNode back to this .c file. Then all user has to do is call
+// BellmanFord. They shouldn't know about the internals anyway.
+
 
 
 MetaNode** make_array(size_t numNodes) {
@@ -28,7 +32,7 @@ MetaNode** make_array(size_t numNodes) {
  */
 MetaNode* genNonSource() {
     MetaNode* currentNode = (MetaNode*) malloc(sizeof(MetaNode));
-    currentNode->DistToSource = INT64_MAX;
+    currentNode->DistToSource = (double) INT64_MAX;
     currentNode->predecessor = (size_t) NULL;
     
     return currentNode;
@@ -49,8 +53,10 @@ void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID) {
     sourceNode->DistToSource = 0;
     arr[sourceID] = sourceNode;
     
-    for (size_t k = 0; k < size && k != sourceID; k++) {
-        arr[k] = genNonSource();
+    // REMEMBER THIS ERROR; WAS PREVIOUSLY : k < size && k != sourceID
+    for (size_t k = 0; k < size; k++) {
+        
+        if (k != sourceID) { arr[k] = genNonSource(); }
     }
     
 }
@@ -75,50 +81,57 @@ void Relax(MetaNode** arr, size_t u, size_t v, double w) {
 }
 
 
+void print_holder(MetaNode** holder, size_t length) {
+    
+    for (size_t k = 0; k < length; k++) {
+        MetaNode* element = holder[k];
+        printf("Vertex ID: %zu\t", k);
+        printf("Distance from source: %f\t", element->DistToSource);
+        printf("Previous node: %zu\n", element->predecessor);
+    }
+    
+}
+
+
+
 /* 
  * 
  * @param g the Graph containing the node network
  * @param nodeID the index of the node for which to find the shortest distance to the source
  */
-double *bellmanFord(Graph *g, size_t source) {
+double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNode** holder) {
     
     
     // MetaNode** stores information concerning shortest path, so for each node,
     // it's predecessor, distance from source node to it, etc
     
-    size_t numNodes = getNumNodes(g);
-    MetaNode **holder = (MetaNode **) malloc(sizeof(MetaNode*) * numNodes);
-    
-    InitializeSingleSource(holder, numNodes, source);
+//    size_t numNodes = getNumNodes(g);
+//    MetaNode **holder = (MetaNode **) malloc(sizeof(MetaNode*) * numNodes);
+//    
+//    InitializeSingleSource(holder, numNodes, source);
     
     
     // loop over vertices and edges, updating distances until no longer possible
     
+//    print_holder(holder, numNodes);
     for (unsigned vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
 
-        for (size_t vertex2ID = vertex1ID+1 ; vertex2ID < numNodes; vertex2ID++) {
-            
-            unsigned currentID;
-            for (currentID = neigh_first(g, vertex1ID); !neigh_done(g); neigh_next(g)) {
+//        for (size_t vertex2ID = vertex1ID+1 ; vertex2ID < numNodes; vertex2ID++) {
+        
+        // NB: by specification, always have that vertex2ID < vertex1ID
+            unsigned vertex2ID;
+            for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); neigh_next(g)) {
                 
-                // this condition ensures only single edge checked
-                // TODO: change graph structure to avoid wasted space
-                if (currentID >= vertex2ID) {
-                    Relax(holder, vertex1ID, currentID, getWeight(g));
-                    Relax(holder, currentID, vertex1ID, getWeight(g));
-                }
+                Relax(holder, vertex1ID, vertex2ID, getWeight(g));
+                Relax(holder, vertex2ID, vertex1ID, getWeight(g));
                 
             }
-        }
+//        }
     }
     
     
-    
-    //
-    
-    
-    
-    return 0;
+    double destToSource = holder[dest]->DistToSource;
+    return destToSource;
 }
 
 
