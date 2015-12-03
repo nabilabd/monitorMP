@@ -147,29 +147,27 @@ double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNo
  *
  * @return the vertex ID closest to the source node
  */
-size_t getClosest(MetaNode** holder, size_t sourceID, size_t numNodes) {
+size_t getClosest(MetaNode** holder, size_t NodesInS[], size_t numNodes) {
     
-    size_t tempMin;  // current minimum value
-    size_t tempInd;  // index of the current minimum value
+    size_t tempMin = INT64_MAX;  // current minimum value
+    size_t tempInd = -1;  // index of the current minimum value
     size_t currentVal;
     
-    // initialize values
-    if (sourceID != 0) tempInd = 0;
-    else tempInd = 1;
-    tempMin = holder[tempInd]->DistToSource;
-    
     for (size_t j = 0; j < numNodes; j++) {
-        if (j != sourceID) {
+        
+        // if node is not in S, then consider its distance to source
+        if (NodesInS[j] == 1) {
             
             currentVal = holder[j]->DistToSource;
             if (tempMin > currentVal) {
                 tempInd = j;
                 tempMin = currentVal;
             }
-            
         }
     }
     
+    // closest node found, so update the array showing inclusion in S
+    NodesInS[tempInd] = 0;
     
     return tempInd;
 }
@@ -179,21 +177,40 @@ size_t getClosest(MetaNode** holder, size_t sourceID, size_t numNodes) {
  *
  * NB: Parameters are same as for Bellman-Ford
  */
-double dijkstra(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNode** holder) {
+double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder) {
     
-    PriorityQueue *S = pq_make();
+    // up to here, "holder" assumed to already be initialized with source node "source"
     
-    size_t verticesRemaining = numNodes;
     
-    while (verticesRemaining > 0) {
-        
-        
-        
+    size_t num_nodes = getNumNodes(g);
+    size_t verticesRemaining = num_nodes;
+    
+    // initialize all elements to not being in S
+    size_t nodesInS[num_nodes];    // 0 if contained in S, otherwise 1.
+    for (int m = 0; m < num_nodes; m++) {
+        nodesInS[m] = 1;
     }
     
     
     
-    return 0.0;
+    while (verticesRemaining > 0) {
+        
+        size_t u = getClosest(holder, nodesInS, num_nodes);
+        
+        // loop through neighbors of u, updating distances in the graph
+        for (unsigned vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
+            Relax(holder, u, vertexID, getWeight(g));
+            Relax(holder, vertexID, u, getWeight(g));
+        }
+        
+        verticesRemaining--;
+    }
+    
+    
+    
+    double min_dist = holder[dest]->DistToSource;
+    return min_dist;
 }
+
 
 
