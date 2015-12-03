@@ -50,7 +50,7 @@ void addEdge(Graph* g, unsigned from, unsigned to);
  *
  * @param wt weight of the edge connecting "from" and "to"
  */
-void addWtdEdge(Graph* g, unsigned from, unsigned to, double wt);
+void addWtdEdge(Graph* g, unsigned from, unsigned to, float wt);
 
 
 /*

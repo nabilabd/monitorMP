@@ -42,8 +42,9 @@ Graph* makeGraph(size_t numNodes) {
     g->numNodes = numNodes;
     
     g->adjList = (ALElement **) malloc(sizeof(ALElement*) * numNodes);
-    for (size_t i = 0; i < numNodes; i++)
+    for (size_t i = 0; i < numNodes; i++) {
         g->adjList[i] = NULL;
+    }
     
     g->iter = NULL;
     
@@ -89,7 +90,7 @@ void addEdge(Graph *g, unsigned from, unsigned to) {
 
 
 
-void addWtdEdge(Graph* g, unsigned from, unsigned to, double wt) {
+void addWtdEdge(Graph* g, unsigned from, unsigned to, float wt) {
     
     ALElement* e = malloc(sizeof(ALElement));
     e->from = from;
