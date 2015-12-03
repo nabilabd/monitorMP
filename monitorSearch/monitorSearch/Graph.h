@@ -70,6 +70,11 @@ size_t getNumNodes(Graph *g);
  *                             *
 \*******************************/
 
+
+
+void print_graph(Graph* myGraph);
+
+
 /*
  * Get the first neighbor of a node.
  *
