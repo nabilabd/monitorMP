@@ -10,6 +10,8 @@
 
 #include "BellmanFord.h"
 
+
+
 // IDEA: don't export "Relax", "Initialize", and move definition of
 // MetaNode back to this .c file. Then all user has to do is call
 // BellmanFord. They shouldn't know about the internals anyway.
@@ -140,5 +142,58 @@ double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNo
 }
 
 
+/*
+ * Helper function for Dijkstra's algorithm
+ *
+ * @return the vertex ID closest to the source node
+ */
+size_t getClosest(MetaNode** holder, size_t sourceID, size_t numNodes) {
+    
+    size_t tempMin;  // current minimum value
+    size_t tempInd;  // index of the current minimum value
+    size_t currentVal;
+    
+    // initialize values
+    if (sourceID != 0) tempInd = 0;
+    else tempInd = 1;
+    tempMin = holder[tempInd]->DistToSource;
+    
+    for (size_t j = 0; j < numNodes; j++) {
+        if (j != sourceID) {
+            
+            currentVal = holder[j]->DistToSource;
+            if (tempMin > currentVal) {
+                tempInd = j;
+                tempMin = currentVal;
+            }
+            
+        }
+    }
+    
+    
+    return tempInd;
+}
+
+
+/*
+ *
+ * NB: Parameters are same as for Bellman-Ford
+ */
+double dijkstra(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNode** holder) {
+    
+    PriorityQueue *S = pq_make();
+    
+    size_t verticesRemaining = numNodes;
+    
+    while (verticesRemaining > 0) {
+        
+        
+        
+    }
+    
+    
+    
+    return 0.0;
+}
 
 
