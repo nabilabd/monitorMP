@@ -17,10 +17,11 @@ Graph *readGraph(char const *filename);
 int main(int argc, const char * argv[]) {
     // insert code here...
     
-    if (argc != 2) {
+    if (argc < 2) {
         Warning("main", "missing argument: filename of graph");
+    } else if (argc > 2) {
+        Warning("main", "too many arguments; only using the second one");
     }
-    
     
     char const *graph_file = argv[1];
 
