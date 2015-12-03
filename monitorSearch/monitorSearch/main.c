@@ -27,7 +27,7 @@ int main(int argc, const char * argv[]) {
 
     Graph* graph = readGraph(graph_file);
     size_t graphSize = getNumNodes(graph);
-    print_graph(graph);
+//    print_graph(graph);
     
     
     MetaNode** myArray = make_array( graphSize );
@@ -35,7 +35,14 @@ int main(int argc, const char * argv[]) {
     
     
     double mindist = bellmanFord(graph, 0, 3, graphSize, myArray);
-    printf("Bellman-Ford min distance is: %f\n", mindist);
+    printf("Bellman-Ford min distance is: %f\n\n", mindist);
+    
+    MetaNode** myArray2 = make_array( graphSize );
+    InitializeSingleSource(myArray2, graphSize, 0);
+    
+    double dijk_min = dijkstra(graph, 0, 3, myArray2);
+    printf("Dijkstra min distance is: %f\n", dijk_min);
+    
     
     
     freeGraph(graph);
