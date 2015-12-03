@@ -192,13 +192,13 @@ double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder) {
     }
     
     
-    
     while (verticesRemaining > 0) {
         
-        size_t u = getClosest(holder, nodesInS, num_nodes);
+        unsigned u = (unsigned) getClosest(holder, nodesInS, num_nodes);
         
         // loop through neighbors of u, updating distances in the graph
-        for (unsigned vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
+        unsigned vertexID;
+        for (vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
             Relax(holder, u, vertexID, getWeight(g));
             Relax(holder, vertexID, u, getWeight(g));
         }
