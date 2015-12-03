@@ -115,6 +115,27 @@ void addWtdEdge(Graph* g, unsigned from, unsigned to, float wt) {
 
 
 
+/*
+ * Print array of metadata
+ */
+void print_graph(Graph* myGraph) {
+    
+    size_t num_nodes = getNumNodes(myGraph);
+    printf("Number of Nodes is: %zu\n", num_nodes);
+    
+    for (unsigned k = 0; k < num_nodes; k++) {
+        
+        for (unsigned vert = neigh_first(myGraph, k); !neigh_done(myGraph); vert = neigh_next(myGraph)) {
+            
+            double currWeight = getWeight(myGraph);
+            printf("Edge from %u to %u with weight: %f\n", k, vert, currWeight);
+            
+        }
+    }
+    
+}
+
+
 
 
 // iterator methods
