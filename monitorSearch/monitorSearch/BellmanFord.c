@@ -167,7 +167,7 @@ size_t getClosest(MetaNode** holder, size_t NodesInS[], size_t numNodes) {
     }
     
     // closest node found, so update the array showing inclusion in S
-    NodesInS[tempInd] = 0;
+    NodesInS[tempInd] = 0; //
     
     return tempInd;
 }
@@ -195,12 +195,19 @@ double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder) {
     while (verticesRemaining > 0) {
         
         unsigned u = (unsigned) getClosest(holder, nodesInS, num_nodes);
+        printf("Closest node is: %u\n", u);
         
-        // loop through neighbors of u, updating distances in the graph
+        // loop through neighbors of u, updating distances and predecessors
         unsigned vertexID;
         for (vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
             Relax(holder, u, vertexID, getWeight(g));
             Relax(holder, vertexID, u, getWeight(g));
+        }
+        
+
+        print_holder(holder, num_nodes);
+        for (int k=0; k < num_nodes; k++) {
+            printf("Index %d, nodesInS val: %d\n", k, nodesInS[k]);
         }
         
         verticesRemaining--;
