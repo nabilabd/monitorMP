@@ -49,7 +49,7 @@ void run_sim() {
     // as long as the priority queue is not empty
     // remove its top element, and execute its callback
     // on the event data
-    while (simtime <= endTime) {
+    while (simtime <= 365) {
         SimEvent *se = (SimEvent *) pq_pop(FEL);
         simtime = se->timestamp;
         callback(se->data);
