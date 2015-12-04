@@ -39,22 +39,23 @@ typedef struct Graph {
  *
  * @param filename name of file containing graph to be read
  */
-Graph *readGraph(char const *filename, size_t numEdges) {
+Graph *readGraph(char const *filename) {
     
     FILE *fp = fopen(filename, "r");
     
     float weight;
-    size_t numberOfNodes;
+    size_t numberOfNodes, numberOfEdges;
     unsigned fromVertex, toVertex;
     
     fscanf(fp, "%zu", &numberOfNodes);
+    fscanf(fp, "%zu", &numberOfEdges);
     //    printf("Number of nodes is %zu\n", numNodes);
     
     
     Graph *myGraph = makeGraph(numberOfNodes);
     
     // Associate with each vertex, a list of vertices it is connected to
-    for (size_t k = 0; k < numEdges; k++) {
+    for (size_t k = 0; k < numberOfEdges; k++) {
         
         fscanf(fp, "%u:", &fromVertex);
         fscanf(fp, "%u:", &toVertex);
