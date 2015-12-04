@@ -123,9 +123,6 @@ double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNo
 //    print_holder(holder, numNodes);
     for (unsigned vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
 
-//        for (size_t vertex2ID = vertex1ID+1 ; vertex2ID < numNodes; vertex2ID++) {
-        
-        // NB: by specification, always have that vertex2ID < vertex1ID
             unsigned vertex2ID;
             for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); vertex2ID = neigh_next(g)) {
                 
@@ -133,7 +130,6 @@ double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNo
                 Relax(holder, vertex2ID, vertex1ID, getWeight(g));
                 
             }
-//        }
     }
     
     
@@ -195,7 +191,6 @@ double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder) {
     while (verticesRemaining > 0) {
         
         unsigned u = (unsigned) getClosest(holder, nodesInS, num_nodes);
-        printf("Closest node is: %u\n", u);
         
         // loop through neighbors of u, updating distances and predecessors
         unsigned vertexID;
@@ -203,13 +198,7 @@ double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder) {
             Relax(holder, u, vertexID, getWeight(g));
             Relax(holder, vertexID, u, getWeight(g));
         }
-        
 
-        print_holder(holder, num_nodes);
-        for (int k=0; k < num_nodes; k++) {
-            printf("Index %d, nodesInS val: %d\n", k, nodesInS[k]);
-        }
-        
         verticesRemaining--;
     }
     
