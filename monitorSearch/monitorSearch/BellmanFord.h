@@ -18,6 +18,9 @@
 double bellmanFord(Graph *g, size_t source, size_t dest);
 
 
+double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads);
+
+
 double dijkstra(Graph *g, size_t source, size_t dest);
 
 
