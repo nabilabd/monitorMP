@@ -125,7 +125,7 @@ double bellmanFord(Graph *g, size_t source, size_t dest) {
     
     size_t numNodes = getNumNodes(g);
     MetaNode** myArray = make_array( numNodes );
-    InitializeSingleSource(myArray, numNodes, 4);
+    InitializeSingleSource(myArray, numNodes, source);
     
     
     // loop over vertices and edges, updating distances until no longer possible
