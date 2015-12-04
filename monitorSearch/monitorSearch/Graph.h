@@ -24,7 +24,13 @@ typedef struct Graph Graph;
  */
 Graph* makeGraph(size_t numNodes);
 
-// function to read in a graph
+/*
+ * Read in a Graph Structure from Text Representation
+ *
+ *
+ * @param filename name of file containing graph to be read
+ * @return a graph object as represented by the file
+ */
 Graph *readGraph(char const *filename);
 
 
@@ -50,9 +56,13 @@ void addEdge(Graph* g, unsigned from, unsigned to);
 
 
 /*
+ * Add Weighted Edges to a Graph
+ *
  * Same as addEdge, except allows for weighted edges
  *
+ * @param g the graph to which the edge is to be added
  * @param wt weight of the edge connecting "from" and "to"
+ * @param from,to id's of nodes in the graph
  */
 void addWtdEdge(Graph* g, unsigned from, unsigned to, float wt);
 
@@ -75,7 +85,13 @@ size_t getNumNodes(Graph *g);
 \*******************************/
 
 
-
+/*
+ * Prints a Graph Representation to Stdout
+ * 
+ * This is a utility function to facilitate testing
+ *
+ * @param myGraph the graph to print
+ */
 void print_graph(Graph* myGraph);
 
 
@@ -116,6 +132,15 @@ int neigh_done (Graph *g);
 
 /*
  * Returns the weight of the edge currently accessed
+ * 
+ * This function makes use of the iterator in the graph, by accessing the 
+ * weight of the "edge" represented by the iterator. 
+ *
+ * So if, e.g., the iterator is pointing to the node with ID 3, and which is a 
+ * neighbor of node 0, then this function returns the weight of the edge 
+ * connecting 0 and 3.
+ *
+ * @param g The graph for
  */
 double getWeight(Graph *g);
 

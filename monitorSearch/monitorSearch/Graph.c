@@ -34,11 +34,6 @@ typedef struct Graph {
 
 
 
-/*
- * Read in a Graph Structure from Text Representation
- *
- * @param filename name of file containing graph to be read
- */
 Graph *readGraph(char const *filename) {
     
     FILE *fp = fopen(filename, "r");
@@ -49,8 +44,6 @@ Graph *readGraph(char const *filename) {
     
     fscanf(fp, "%zu", &numberOfNodes);
     fscanf(fp, "%zu", &numberOfEdges);
-    //    printf("Number of nodes is %zu\n", numNodes);
-    
     
     Graph *myGraph = makeGraph(numberOfNodes);
     
