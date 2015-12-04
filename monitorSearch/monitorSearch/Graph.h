@@ -24,6 +24,10 @@ typedef struct Graph Graph;
  */
 Graph* makeGraph(size_t numNodes);
 
+// function to read in a graph
+Graph *readGraph(char const *filename);
+
+
 /*
  * Free the memory allocated for the graph
  *

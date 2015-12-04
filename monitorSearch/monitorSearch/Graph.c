@@ -34,6 +34,41 @@ typedef struct Graph {
 
 
 
+/*
+ * Read in a Graph Structure from Text Representation
+ *
+ * @param filename name of file containing graph to be read
+ */
+Graph *readGraph(char const *filename) {
+    
+    FILE *fp = fopen(filename, "r");
+    
+    float weight;
+    size_t numberOfNodes;
+    unsigned fromVertex, toVertex;
+    
+    fscanf(fp, "%zu", &numberOfNodes);
+    //    printf("Number of nodes is %zu\n", numNodes);
+    
+    
+    Graph *myGraph = makeGraph(numberOfNodes);
+    
+    // Associate with each vertex, a list of vertices it is connected to
+    for (size_t k = 0; k < numberOfNodes; k++) {
+        
+        fscanf(fp, "%u:", &fromVertex);
+        fscanf(fp, "%u:", &toVertex);
+        fscanf(fp, "%f", &weight);
+        
+        addWtdEdge(myGraph, fromVertex, toVertex, weight);
+        
+    }
+    
+    return myGraph;
+}
+
+
+
 
 
 Graph* makeGraph(size_t numNodes) {
