@@ -13,7 +13,7 @@
 #include <string.h>
 
 void usage(const char* progName) {
-    printf("Usage: %s inputFile outputFile\n", progName);
+    printf("Usage: %s inputFile outputFile probability \n", progName);
 }
 
 struct site{
@@ -34,7 +34,7 @@ double getDistance(double lat1,double lon1,double lat2,double lon2) {
 int main(int argc, const char * argv[]) {
     
     // if number of input args not met, quit
-    if (argc != 3) {
+    if (argc != 4) {
         usage(argv[0]);
         return 0;
     }
@@ -45,7 +45,8 @@ int main(int argc, const char * argv[]) {
     // parse input
     const char* input_file = argv[1];
     const char* output_file = argv[2];
-    
+    double prob = strtod(argv[3], NULL); // c-p'd from Karl's code
+
     FILE *fp1 = fopen(input_file, "r");
     if (fp1 == NULL)
         return 0;            // file doesn't exist
@@ -79,9 +80,15 @@ int main(int argc, const char * argv[]) {
         
         for (size_t to = 0; to < n; to++) {
             
-            double distance = getDistance(sites[n].LAT,sites[n].LON,sites[to].LAT,sites[to].LON);
-            fprintf(fp2, "%zu %zu %lf\n", n, to, distance);
-            fprintf(fp2, "%zu %zu %lf\n", to, n, distance);
+            // compute probability of edge
+            double r = rand() / (double) RAND_MAX;
+            
+            if (r < prob) {         // edge exists
+                double distance = getDistance(sites[n].LAT,sites[n].LON,sites[to].LAT,sites[to].LON);
+                fprintf(fp2, "%zu %zu %lf\n", n, to, distance);
+                fprintf(fp2, "%zu %zu %lf\n", to, n, distance);
+            }
+
         }
     }
     
