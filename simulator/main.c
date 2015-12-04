@@ -10,19 +10,26 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "SimulationEngine.h"
 #include "FIFOQueue.h"
 #include "Common.h"
 
 #define VERBOSE                 // comment this command to disable verbose mode
 
+int baseIndex;
+int numTechnicians;
+int numMachines;
+double maintenanceTime;
+double distributionMean;
+
 void usage(const char* progName) {
-    printf("Usage: %s bi NofT mt dist tl\n", progName);
+    printf("Usage: %s gf bi NumTech NumMach mt dist\n", progName);
     printf("\tbi  : basecamp index (int)\n");
-    printf("\tNofT: number of technicians (int)\n");
+    printf("\tNumTech: number of technicians (int)\n");
+    printf("\tNumMach: number of machines (int)\n");
     printf("\tmt  : maintenance time (double)\n");
     printf("\tdist: mean of exponential distribution (double)\n");
-    printf("\ttl  : time length of simulation (double)\n");
 }
 
 /***************** Random Number Generation *****************\
@@ -30,7 +37,7 @@ void usage(const char* progName) {
  * These functions define how to generate a random number   *
  * from an exponential distribution. Also defined are the   *
  * variables used as the means of the distribution.         *
-\************************************************************/
+ \************************************************************/
 
 /*
  * Generate a uniform random number in the range [0,1)
@@ -59,7 +66,7 @@ double randexp(double mean) {
  *                                                          *
  * Defined below are the event handlers, the event types,   *
  * as well as the state variables for the simulation.       *
-\************************************************************/
+ \************************************************************/
 
 // EventKind: The kinds of events
 typedef enum {MALFUNCTION, MAINTENANCE, FIXED, RETURNED} EventKind;
@@ -79,7 +86,7 @@ FIFOQueue *machinesQ = NULL;
 
 // Define a machine
 typedef struct Machine {
-    int machineID;             // machine ID
+    int machineID;              // machine ID
     double startWaiting;        // time when machine starts to wait for maintenance
     double endWaiting;          // time when machine stops waiting
 } Machine;
@@ -89,26 +96,6 @@ typedef struct Machine {
 typedef struct EventData {
     EventKind eventKind;
     Machine *machine;
-    // struct {
-    //     Machine *machine;
-    // } eventParam
-
-    // union {
-        
-    //     struct {                    // for arrival
-    //         Machine *machine;
-    //     } arrivalEvent;
-        
-    //     struct {                    // for landing
-    //         Aircraft *aircraft;
-    //     } landedEvent;
-        
-    //     struct {                    // for disappearing
-    //         Aircraft *aircraft;
-    //     } disappearedEvent;
-        
-    // } eventParam;
-    
 } EventData;
 
 
@@ -125,6 +112,7 @@ void returned           (EventData *e);
 
 // This function is called by the simulation engine, and should process the event
 // described by the event data
+
 void callback(void* data) {
     
     EventData* eventData = (EventData*) data;
@@ -144,9 +132,10 @@ void callback(void* data) {
     
 }
 
+// function to calculate travelling time
 double travel_time(int base, int machine_dest) {
-
-
+    double x = 1;
+    return x;
 }
 
 /*
@@ -158,45 +147,31 @@ void malfunction (EventData *malfunctionData) {
     
     
 #ifdef VERBOSE
-    printf("TS = %f: Machine %d: malfunctioned.\n", current_time(), malfunctionData->machine.machineID);
+    printf("TS = %f: Machine %d: malfunctioned.", current_time(), malfunctionData->machine->machineID);
     fflush(stdout);
 #endif
     
     nWaiting += 1;          // number of waiting machines to be fixed
+    STAT_numMalfunctions += 1;
+    malfunctionData->machine->startWaiting = current_time(); // start waiting time since malfunction event happens
     
-    malfunctionData->machine.startWaiting = current_time();
-
     // create a machine
-    MAchine* temp_machine = (Machine *) malloc(sizeof(Machine));
+    Machine* temp_machine = (Machine *) malloc(sizeof(Machine));
     if (temp_machine == NULL) FatalError("malfunction", "Could not allocate memory for machine.");
     
-    temp_machine->machineID = malfunctionData->machine.machineID;                   // set machine ID
+    temp_machine->machineID = malfunctionData->machine->machineID;                   // set machine ID
     temp_machine->startWaiting = current_time();                                    // set time machine starts waiting (now)
     
     
-    // // only schedule a new arrival if the number of aircrafts has not exceeded the maximum allowed
-    // if (nTotalArrived < MAX_ARRIVALS) {
-        
-    //     // Compute the time-stamp of the new arrival,
-    //     double ts = current_time() + randexp(A);
-        
-    //     EventData* newArrival = (EventData *) malloc(sizeof(EventData));
-    //     if (newArrival == NULL) FatalError("arrival", "Could not allocate memory for new arrival event.");
-        
-    //     newArrival->eventKind = ARRIVAL;
-    //     newArrival->eventParam.arrivalEvent.aircraftID = aircraft->aircraftID+1;
-        
-    //     schedule(ts, newArrival);
-    // }
-    
-    // check if there is a technician in the basecamp, schedule maintenance event
+    // if there is a technician in the basecamp, schedule maintenance event
     if (nTechnician > 0) {
         
         nTechnician -= 1;                                   // reduce number of technician at basecamp by 1
-        temp_machine->endWaiting = current_time();          // end its waiting time
+        
+        printf(" Technician dispatched, remaining technicians at basecamp is %d.\n", nTechnician);
+        fflush(stdout);
         
         EventData* newMaintenance = (EventData *) malloc(sizeof(EventData));
-        
         if (newMaintenance == NULL) FatalError("malfunction", "Could not allocate memory for new maintenance event.");
         
         newMaintenance->eventKind = MAINTENANCE;
@@ -207,11 +182,13 @@ void malfunction (EventData *malfunctionData) {
     
     // otherwise, there is no technician in the basecamp, push machine to queue
     else {
+        printf(" No technician left at basecamp.\n");
+        fflush(stdout);
         fifo_push(machinesQ, temp_machine);
     }
     
     
-    // done with arrival event; free it
+    // done with malfunction event; free it
     free(malfunctionData);
 }
 
@@ -223,20 +200,20 @@ void malfunction (EventData *malfunctionData) {
  * @param maintenanceData the event data
  */
 void maintenance (EventData *maintenanceData) {
-
+    
     nWaiting -= 1;          // number of machines that are waiting to be fixed decreases
     maintenanceData->machine->endWaiting = current_time();          // end its waiting time
-    double waiting_time = maintenanceData->machine->endWaiting - maintenanceData->machine->startWaiting;
-
+    double waiting_time = maintenanceData->machine->endWaiting - maintenanceData->machine->startWaiting; //calculate waiting time
+    
 #ifdef VERBOSE
     printf("TS = %f: Machine %d started maintenance, waited for %f.\n", current_time(), maintenanceData->machine->machineID, waiting_time);
     fflush(stdout);
 #endif
-
-    STAT_totalWaitingTime = STAT_totalWaitingTime + waiting_time;
-
+    
+    STAT_totalWaitingTime = STAT_totalWaitingTime + waiting_time;   // update statistics
+    
     // schedule maintenance to finish by the given time
-    double ts = current_time() + maintenanceTime;              
+    double ts = current_time() + maintenanceTime;
     
     EventData *newFixed = (EventData *) malloc(sizeof(EventData));
     if (newFixed == NULL) FatalError("maintenance", "Could not allocate memory for fixed event.");
@@ -244,29 +221,8 @@ void maintenance (EventData *maintenanceData) {
     newFixed->eventKind = FIXED;
     newFixed->machine = maintenanceData->machine;
     
+    // schedule the finish of the maintenance, called the Fixed event
     schedule(ts, newFixed);
-    
-    
-    // // if there are other aircrafts waiting to land, schedule their landing
-    // if (nWaiting > 0) {
-        
-    //     // remove aircraft from queue
-    //     Aircraft* aircraft = fifo_pop(inAirQ);
-    //     aircraft->endWaiting = current_time();          // end its waiting time
-        
-        
-    //     EventData *newLanded = (EventData *) malloc(sizeof(EventData));
-    //     if (newLanded == NULL) FatalError("landed", "Could not allocate memory for disappeared event.");
-        
-    //     newLanded->eventKind = LANDED;
-    //     newLanded->eventParam.landedEvent.aircraft = aircraft;
-        
-    //     schedule(current_time() + R, newLanded);
-    // }
-    // // otherwise, free the runway
-    // else {
-    //     runwayState = FREE;
-    // }
     
     free(maintenanceData);
 }
@@ -279,7 +235,7 @@ void maintenance (EventData *maintenanceData) {
  * @param fixedData the event data
  */
 void fixed(EventData *fixedData) {
-    nTotalFixed += 1;         // aircraft disappears from ground
+    nTotalFixed += 1;         // total machines fixed increases
     
 #ifdef VERBOSE
     printf("TS = %f: Machine %d finished maintenance.\n", current_time(), fixedData->machine->machineID);
@@ -291,18 +247,18 @@ void fixed(EventData *fixedData) {
     
     newMalfunction->eventKind = MALFUNCTION;
     newMalfunction->machine = fixedData->machine;
-
+    
     EventData *newReturned= (EventData *) malloc(sizeof(EventData));
     if (newReturned == NULL) FatalError("fixed", "Could not allocate memory for returned event.");
     
     newReturned->eventKind = RETURNED;
     newReturned->machine = fixedData->machine;
-
+    
+    // schedule the next malfunction and the technician returned to basecamp
     schedule (current_time() + randexp(distributionMean), newMalfunction);
     schedule (current_time() + travel_time(baseIndex, fixedData->machine->machineID), newReturned);
-
-    // free aircraft and event data
-    free(fixedData->machine);
+    
+    // free event data
     free(fixedData);
 }
 
@@ -313,52 +269,87 @@ void fixed(EventData *fixedData) {
  * @param returnedData the event data
  */
 void returned(EventData *returnedData) {
-    nTechnician += 1;
     
 #ifdef VERBOSE
-    printf("TS = %f: Technician returned from fixing Machine %d.\n", current_time(), returnedData->machine->machineID);
+    printf("TS = %f: Technician returned from fixing Machine %d.", current_time(), returnedData->machine->machineID);
     fflush(stdout);
 #endif
+    
+    // if there is a machine waiting to be fixed
+    if (nWaiting > 0) {
+        
+        // pop from queue
+        Machine* temp_machine = fifo_pop(machinesQ);
+        EventData *newMaintenance = (EventData *) malloc(sizeof(EventData));
+        if (newMaintenance == NULL) FatalError("returned","Could not allocate memory for maintenance event.");
+        
+        newMaintenance->eventKind = MAINTENANCE;
+        newMaintenance->machine = temp_machine;
+        
+        // schedule a maintenance event immediately
+        schedule(current_time() + travel_time(baseIndex, temp_machine->machineID), newMaintenance);
+        
+        printf(" Technician dispatched to fix Machine %d.\n", temp_machine->machineID);
+        fflush(stdout);
+        
+        
+    }
+    else
+        nTechnician += 1; //number of technician in the basecamp increases
+
+    
+    // free the event data
+    free(returnedData);
 }
 
 
 
 int main(int argc, const char * argv[]) {
-
-    // if number of input args not met, quit
-    if (argc != 7) {
+    
+     //if number of input args not met, quit
+    if (argc != 6) {
         usage(argv[0]);
         return 0;
     }
-
+    
     srand((unsigned int)time(NULL));        // seed the random number generator
     
-    const char* graphFile = argv[1];
-    int baseIndex = (int) stroul (argv[2], NULL, 10);
-    int numTechnicians = (int) stroul (argv[3], NULL, 10);
-    double maintenanceTime = strtod(argv[4], NULL);
-    double distributionMean = strtod(argv[5], NULL);
-    double endTime = strtod(argv[6],NULL);
+    baseIndex = atoi(argv[1]);//(int) stroul (argv[2], NULL, 10);
+    numTechnicians = atoi(argv[2]);//(int) stroul (argv[3], NULL, 10);
+    numMachines = atoi(argv[3]);
+    maintenanceTime = strtod(argv[4], NULL);
+    distributionMean = strtod(argv[5], NULL);
     
     // create empty machines queue
     machinesQ = fifo_create();
     
+    for (int i = 0; i < numMachines; i++) {
+        if (i != baseIndex){
+            EventData *malfunction = (EventData *) malloc(sizeof(EventData));
+            if (malfunction == NULL) FatalError("main", "Could not allocate memory for first malfunctions.");
+            Machine* temp_machine = (Machine *) malloc(sizeof(Machine));
+            if (temp_machine == NULL) FatalError("main", "Could not allocate memory for machines.");
+            
+            malfunction->eventKind = MALFUNCTION;
+            temp_machine->machineID = i;
+            malfunction->machine = temp_machine;
+            
+            double ts = randexp(distributionMean);
+            schedule(ts, malfunction);
+
+        }
+    }
     
-    // // Create the first arrival and schedule it
-    // EventData *arrival = (EventData *) malloc (sizeof(EventData));
-    // if (arrival == NULL) FatalError("main", "Could not allocate memory for first arrival.");
-    
-    // arrival->eventKind = ARRIVAL;
-    // arrival->eventParam.arrivalEvent.aircraftID = 0;
-    
-    // double ts = randexp(A);     // set timestamp of first arrival
-    
-    // schedule(ts, arrival);
+    nTechnician = numTechnicians;
     
     // start the simulation
     run_sim();
     
     
-    printf("Number of machines: %d\n", STAT_numMalfunctions);
+    printf("Number of malfunctions: %d\n", STAT_numMalfunctions);
     printf("Average waiting time: %.2f\n", STAT_totalWaitingTime / STAT_numMalfunctions);
 }
+
+// assume 1 day travel time
+// 1 day maintenance time
+//

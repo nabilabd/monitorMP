@@ -3,7 +3,7 @@
 # EXECUTABLE defines the name of the executable that will be generated
 # SOURCES should include all the .c files in your project (do not include .h)
 
-EXECUTABLE=sim_airport
+EXECUTABLE=sim_network
 SOURCES=main.c FIFOQueue.c PriorityQueue.c SimulationEngine.c Common.c
 
 CC=gcc
