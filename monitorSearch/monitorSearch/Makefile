@@ -3,21 +3,9 @@
 # EXECUTABLE defines the name of the executable that will be generated
 # SOURCES should include all the .c files in your project (do not include .h)
 
-EXECUTABLE=analyzer
-SOURCES=main.c BellmanFord.c Common.c Graph.c
+analyzer: main.c BellmanFord.c Common.c Graph.c 
+	gcc-5 main.c BellmanFord.c Common.c Graph.c -o analyzer -fopenmp
 
-CC=gcc-5
-CFLAGS=-c -Wall -lm -g
-OBJECTS=$(SOURCES:.c=.o)
 
-all: $(SOURCES) $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) -lm $(OBJECTS) -o $@
-
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
-
-clean:
-	rm $(EXECUTABLE) $(OBJECTS)
 
