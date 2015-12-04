@@ -11,10 +11,19 @@
 #include "BellmanFord.h"
 
 
+/***  Internal Code Structure ***/
+ 
+/*
+ The implementations of Dijkstra's and the BF Algorithm, both serial and parallized, 
+ are below. These implementations make use of relaxation operations that operate 
+ on separate arrays tracking metadata for each node (so, separate from the graph 
+ structure itself.
+ 
+ So, whenever the relaxation operations are performed, the tentative fields 
+ storing the node's predecessor and the distance to source, are updated in this 
+ auxiliary array (which is descriptively titled "holder" in the code below).
+ */
 
-// IDEA: don't export "Relax", "Initialize", and move definition of
-// MetaNode back to this .c file. Then all user has to do is call
-// BellmanFord. They shouldn't know about the internals anyway.
 
 
 typedef struct MetaNode {
@@ -24,9 +33,6 @@ typedef struct MetaNode {
     
 } MetaNode;
 
-
-
-MetaNode** make_array(size_t numNodes);
 
 
 MetaNode** make_array(size_t numNodes) {
@@ -39,8 +45,23 @@ MetaNode** make_array(size_t numNodes) {
     return my_array;
 }
 
+
+void free_array(MetaNode** holder_array, size_t length) {
+    
+    for (size_t m = 0; m < length; m++) {
+        MetaNode* temp = holder_array[m];
+        free(temp);
+    }
+    
+    free(holder_array);
+}
+
+
 /*
- * Generates a non-source node
+ * Generates a Non-source Node
+ *
+ * This function generates a metadata element for each node in the graph 
+ * which is not the source node.
  *
  */
 MetaNode* genNonSource() {
@@ -54,10 +75,11 @@ MetaNode* genNonSource() {
 
 
 /*
- *
+ * Initialization Procedure for Dijkstra's and BF Algorithms
  *
  * @param arr the array containing metadata for shortest-path route
  * @param size size of the graph (i.e., number of nodes in it)
+ * @param sourceID ID of the source node in the graph.
  */
 void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID) {
     
@@ -95,6 +117,8 @@ void Relax(MetaNode** arr, size_t u, size_t v, double w) {
 
 /* 
  * Print array of metadata
+ * 
+ * This is mainly a utility functino to facilitate testing.
  */
 void print_holder(MetaNode** holder, size_t length) {
     
@@ -110,13 +134,6 @@ void print_holder(MetaNode** holder, size_t length) {
 
 
 
-
-
-/* 
- * 
- * @param g the Graph containing the node network
- * @param nodeID the index of the node for which to find the shortest distance to the source
- */
 double bellmanFord(Graph *g, size_t source, size_t dest) {
     
     
@@ -141,25 +158,19 @@ double bellmanFord(Graph *g, size_t source, size_t dest) {
             }
     }
     
+    free_array(myArray, numNodes); // free metadata array
     
     double destToSource = myArray[dest]->DistToSource;
     return destToSource;
 }
 
-/*
- 
- * This works by having each thread relax a subset of the edges connecting a 
- * given node with its neighbors.
- 
- */
+
 double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
     
     size_t numNodes = getNumNodes(g);
     MetaNode** myArray = make_array( numNodes );
     InitializeSingleSource(myArray, numNodes, source);
     
-    
-    // loop over vertices and edges, updating distances until no longer possible
     
     omp_set_num_threads(nthreads);
 //    printf("Num of threads is %d\n\n", nthreads);
@@ -190,10 +201,10 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
         }
     }
     
+    free_array(myArray, numNodes); // free metadata array
+    
     double destToSource = myArray[dest]->DistToSource;
     return destToSource;
-
-    
 }
 
 
@@ -201,6 +212,7 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
 /*
  * Helper function for Dijkstra's algorithm
  *
+ * @param NodesInS[] an array identifying if node in S or Q, for D's algorithm
  * @return the vertex ID closest to the source node
  */
 size_t getClosest(MetaNode** holder, size_t NodesInS[], size_t numNodes) {
@@ -229,10 +241,6 @@ size_t getClosest(MetaNode** holder, size_t NodesInS[], size_t numNodes) {
 }
 
 
-/*
- *
- * NB: Parameters are same as for Bellman-Ford
- */
 double dijkstra(Graph *g, size_t source, size_t dest) {
     
     // up to here, "holder" assumed to already be initialized with source node "source"
@@ -267,7 +275,7 @@ double dijkstra(Graph *g, size_t source, size_t dest) {
         verticesRemaining--;
     }
     
-    
+    free_array(holder, num_nodes); // free metadata array
     
     double min_dist = holder[dest]->DistToSource;
     return min_dist;
@@ -335,6 +343,7 @@ double ompDijkstra(Graph *g, size_t source, size_t dest, int nthreads) {
     }
     
     
+    free_array(holder, num_nodes); // free metadata array
     
     double min_dist = holder[dest]->DistToSource;
     return min_dist;
