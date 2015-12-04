@@ -161,33 +161,28 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
     
     // loop over vertices and edges, updating distances until no longer possible
     
-    for (unsigned vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
+    omp_set_num_threads(nthreads);
+    
+    #pragma omp parallel
+    {
+        int id, num_threads;
         
+        id = omp_get_thread_num();
+        num_threads = omp_get_num_threads();
         
-        omp_set_num_threads(nthreads);
-        #pragma omp parallel
-        {
-            int id, num_threads;
+        for (unsigned vertex1ID=id; vertex1ID < numNodes; vertex1ID += num_threads) {
+            
             unsigned vertex2ID;
-            
-            id = omp_get_thread_num();
-            num_threads = omp_get_num_threads();
-            
             for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); vertex2ID = neigh_next(g)) {
                 
-                if (vertex2ID % num_threads == id) {
-                    # pragma omp critical
-                    {
-                        Relax(myArray, vertex1ID, vertex2ID, getWeight(g));
-                        Relax(myArray, vertex2ID, vertex1ID, getWeight(g));
-                    }
+                #pragma omp critical
+                {
+                    Relax(myArray, vertex1ID, vertex2ID, getWeight(g));
+                    Relax(myArray, vertex2ID, vertex1ID, getWeight(g));
                 }
-
             }
-            
+
         }
-        
-        
     }
     
     
