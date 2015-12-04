@@ -17,6 +17,17 @@
 // BellmanFord. They shouldn't know about the internals anyway.
 
 
+typedef struct MetaNode {
+    
+    size_t predecessor;
+    double DistToSource;
+    
+} MetaNode;
+
+
+
+MetaNode** make_array(size_t numNodes);
+
 
 MetaNode** make_array(size_t numNodes) {
     
