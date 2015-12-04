@@ -273,3 +273,75 @@ double dijkstra(Graph *g, size_t source, size_t dest) {
 
 
 
+
+double ompDijkstra(Graph *g, size_t source, size_t dest, int nthreads) {
+    
+    // up to here, "holder" assumed to already be initialized with source node "source"
+    
+    size_t num_nodes = getNumNodes(g);
+    MetaNode** holder = make_array( num_nodes );
+    InitializeSingleSource(holder, num_nodes, source);
+    
+    size_t verticesRemaining = num_nodes;
+    
+    
+    
+    // initialize all elements to not being in S
+    size_t nodesInS[num_nodes];    // 0 if contained in S, otherwise 1.
+    for (int m = 0; m < num_nodes; m++) {
+        nodesInS[m] = 1;
+    }
+    
+    
+    while (verticesRemaining > 0) {
+        
+        unsigned u = (unsigned) getClosest(holder, nodesInS, num_nodes);
+        
+        // loop through neighbors of u, updating distances and predecessors
+        unsigned vertexID;
+        
+        
+        
+        omp_set_num_threads(nthreads);
+        #pragma omp parallel
+        {
+            
+            // this section parallelizes the relaxation of connected edges
+            int id, num_threads;
+            id = omp_get_thread_num();
+            num_threads = omp_get_num_threads();
+            
+            
+            
+            for (vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
+                
+                if (vertexID % num_threads == id) {
+                    #pragma omp critical
+                    {
+                        Relax(holder, u, vertexID, getWeight(g));
+                        Relax(holder, vertexID, u, getWeight(g));
+                    }
+                }
+            }
+            // ends parallelized section
+        }
+        
+        
+        verticesRemaining--;
+    }
+    
+    
+    
+    double min_dist = holder[dest]->DistToSource;
+    return min_dist;
+    
+    
+}
+
+
+
+
+
+
+
+

@@ -24,6 +24,10 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads);
 double dijkstra(Graph *g, size_t source, size_t dest);
 
 
+double ompDijkstra(Graph *g, size_t source, size_t dest, int nthreads);
+
+
+
 #endif /* BellmanFord_h */
 
 
