@@ -162,32 +162,33 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
     // loop over vertices and edges, updating distances until no longer possible
     
     omp_set_num_threads(nthreads);
-    printf("Num of threads is %d\n\n", nthreads);
+//    printf("Num of threads is %d\n\n", nthreads);
     
     
-    #pragma omp parallel
+    #pragma omp parallel shared(myArray, numNodes)
     {
         int id, num_threads;
         
         id = omp_get_thread_num();
         num_threads = omp_get_num_threads();
-        printf("ID is: %d\n", id);
+//        printf("ID is: %d\n", id);
         
         for (unsigned vertex1ID=id; vertex1ID < numNodes; vertex1ID += num_threads) {
             
             unsigned vertex2ID;
-            for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); vertex2ID = neigh_next(g)) {
                 
                 #pragma omp critical
                 {
-                    Relax(myArray, vertex1ID, vertex2ID, getWeight(g));
-                    Relax(myArray, vertex2ID, vertex1ID, getWeight(g));
+                    for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); vertex2ID = neigh_next(g)) {
+                        double wt = getWeight(g);
+                        Relax(myArray, vertex1ID, vertex2ID, wt);
+                        Relax(myArray, vertex2ID, vertex1ID, wt);
+                    }
                 }
-            }
 
+            
         }
     }
-    
     
     double destToSource = myArray[dest]->DistToSource;
     return destToSource;
@@ -258,8 +259,9 @@ double dijkstra(Graph *g, size_t source, size_t dest) {
         // loop through neighbors of u, updating distances and predecessors
         unsigned vertexID;
         for (vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
-            Relax(holder, u, vertexID, getWeight(g));
-            Relax(holder, vertexID, u, getWeight(g));
+            double wt = getWeight(g);
+            Relax(holder, u, vertexID, wt);
+            Relax(holder, vertexID, u, wt);
         }
 
         verticesRemaining--;
@@ -316,10 +318,12 @@ double ompDijkstra(Graph *g, size_t source, size_t dest, int nthreads) {
             for (vertexID = neigh_first(g, u); !neigh_done(g); vertexID = neigh_next(g)) {
                 
                 if (vertexID % num_threads == id) {
+
                     #pragma omp critical
                     {
-                        Relax(holder, u, vertexID, getWeight(g));
-                        Relax(holder, vertexID, u, getWeight(g));
+                        double wt = getWeight(g);
+                        Relax(holder, u, vertexID, wt);
+                        Relax(holder, vertexID, u, wt);
                     }
                 }
             }
@@ -337,11 +341,5 @@ double ompDijkstra(Graph *g, size_t source, size_t dest, int nthreads) {
     
     
 }
-
-
-
-
-
-
 
 
