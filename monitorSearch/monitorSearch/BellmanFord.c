@@ -158,9 +158,9 @@ double bellmanFord(Graph *g, size_t source, size_t dest) {
             }
     }
     
+    double destToSource = myArray[dest]->DistToSource;
     free_array(myArray, numNodes); // free metadata array
     
-    double destToSource = myArray[dest]->DistToSource;
     return destToSource;
 }
 
@@ -201,9 +201,9 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
         }
     }
     
+    double destToSource = myArray[dest]->DistToSource;
     free_array(myArray, numNodes); // free metadata array
     
-    double destToSource = myArray[dest]->DistToSource;
     return destToSource;
 }
 
@@ -275,9 +275,10 @@ double dijkstra(Graph *g, size_t source, size_t dest) {
         verticesRemaining--;
     }
     
-    free_array(holder, num_nodes); // free metadata array
     
     double min_dist = holder[dest]->DistToSource;
+    free_array(holder, num_nodes); // free metadata array
+
     return min_dist;
 }
 
@@ -343,9 +344,9 @@ double ompDijkstra(Graph *g, size_t source, size_t dest, int nthreads) {
     }
     
     
+    double min_dist = holder[dest]->DistToSource;
     free_array(holder, num_nodes); // free metadata array
     
-    double min_dist = holder[dest]->DistToSource;
     return min_dist;
     
     
