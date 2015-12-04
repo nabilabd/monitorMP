@@ -162,6 +162,8 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
     // loop over vertices and edges, updating distances until no longer possible
     
     omp_set_num_threads(nthreads);
+    printf("Num of threads is %d\n\n", nthreads);
+    
     
     #pragma omp parallel
     {
@@ -169,6 +171,7 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
         
         id = omp_get_thread_num();
         num_threads = omp_get_num_threads();
+        printf("ID is: %d\n", id);
         
         for (unsigned vertex1ID=id; vertex1ID < numNodes; vertex1ID += num_threads) {
             
