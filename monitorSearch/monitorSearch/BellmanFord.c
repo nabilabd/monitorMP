@@ -173,13 +173,17 @@ size_t getClosest(MetaNode** holder, size_t NodesInS[], size_t numNodes) {
  *
  * NB: Parameters are same as for Bellman-Ford
  */
-double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder) {
+double dijkstra(Graph *g, size_t source, size_t dest) {
     
     // up to here, "holder" assumed to already be initialized with source node "source"
     
-    
     size_t num_nodes = getNumNodes(g);
+    MetaNode** holder = make_array( num_nodes );
+    InitializeSingleSource(holder, num_nodes, source);
+    
     size_t verticesRemaining = num_nodes;
+    
+    
     
     // initialize all elements to not being in S
     size_t nodesInS[num_nodes];    // 0 if contained in S, otherwise 1.

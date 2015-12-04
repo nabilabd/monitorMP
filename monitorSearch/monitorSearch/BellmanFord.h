@@ -34,7 +34,7 @@ void Relax(MetaNode** arr, size_t u, size_t v, double w);
 double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNode** holder);
 
 
-double dijkstra(Graph *g, size_t source, size_t dest, MetaNode** holder);
+double dijkstra(Graph *g, size_t source, size_t dest);
 
 
 #endif /* BellmanFord_h */
