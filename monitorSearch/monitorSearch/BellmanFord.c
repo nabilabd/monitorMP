@@ -106,34 +106,32 @@ void print_holder(MetaNode** holder, size_t length) {
  * @param g the Graph containing the node network
  * @param nodeID the index of the node for which to find the shortest distance to the source
  */
-double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNode** holder) {
+double bellmanFord(Graph *g, size_t source, size_t dest) {
     
     
     // MetaNode** stores information concerning shortest path, so for each node,
     // it's predecessor, distance from source node to it, etc
     
-//    size_t numNodes = getNumNodes(g);
-//    MetaNode **holder = (MetaNode **) malloc(sizeof(MetaNode*) * numNodes);
-//    
-//    InitializeSingleSource(holder, numNodes, source);
+    size_t numNodes = getNumNodes(g);
+    MetaNode** myArray = make_array( numNodes );
+    InitializeSingleSource(myArray, numNodes, 4);
     
     
     // loop over vertices and edges, updating distances until no longer possible
     
-//    print_holder(holder, numNodes);
     for (unsigned vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
 
             unsigned vertex2ID;
             for (vertex2ID = neigh_first(g, vertex1ID); !neigh_done(g); vertex2ID = neigh_next(g)) {
                 
-                Relax(holder, vertex1ID, vertex2ID, getWeight(g));
-                Relax(holder, vertex2ID, vertex1ID, getWeight(g));
+                Relax(myArray, vertex1ID, vertex2ID, getWeight(g));
+                Relax(myArray, vertex2ID, vertex1ID, getWeight(g));
                 
             }
     }
     
     
-    double destToSource = holder[dest]->DistToSource;
+    double destToSource = myArray[dest]->DistToSource;
     return destToSource;
 }
 

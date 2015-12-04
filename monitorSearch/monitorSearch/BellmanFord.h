@@ -31,7 +31,7 @@ void InitializeSingleSource(MetaNode** arr, size_t size, size_t sourceID);
 void Relax(MetaNode** arr, size_t u, size_t v, double w);
 
 
-double bellmanFord(Graph *g, size_t source, size_t dest, size_t numNodes, MetaNode** holder);
+double bellmanFord(Graph *g, size_t source, size_t dest);
 
 
 double dijkstra(Graph *g, size_t source, size_t dest);
