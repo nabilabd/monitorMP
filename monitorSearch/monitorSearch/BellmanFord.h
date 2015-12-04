@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Graph.h"
-
+#include <omp.h>
 
 
 double bellmanFord(Graph *g, size_t source, size_t dest);

@@ -146,7 +146,12 @@ double bellmanFord(Graph *g, size_t source, size_t dest) {
     return destToSource;
 }
 
-
+/*
+ 
+ * This works by having each thread relax a subset of the edges connecting a 
+ * given node with its neighbors.
+ 
+ */
 double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
     
     size_t numNodes = getNumNodes(g);
@@ -159,7 +164,7 @@ double ompBellFord(Graph *g, size_t source, size_t dest, int nthreads) {
     for (unsigned vertex1ID=0; vertex1ID < numNodes; vertex1ID++) {
         
         
-        omp_set_num_threads(NUM_THREADS);
+        omp_set_num_threads(nthreads);
         #pragma omp parallel
         {
             int id, num_threads;
