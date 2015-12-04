@@ -39,7 +39,7 @@ typedef struct Graph {
  *
  * @param filename name of file containing graph to be read
  */
-Graph *readGraph(char const *filename) {
+Graph *readGraph(char const *filename, size_t numEdges) {
     
     FILE *fp = fopen(filename, "r");
     
@@ -54,7 +54,7 @@ Graph *readGraph(char const *filename) {
     Graph *myGraph = makeGraph(numberOfNodes);
     
     // Associate with each vertex, a list of vertices it is connected to
-    for (size_t k = 0; k < numberOfNodes; k++) {
+    for (size_t k = 0; k < numEdges; k++) {
         
         fscanf(fp, "%u:", &fromVertex);
         fscanf(fp, "%u:", &toVertex);
