@@ -81,6 +81,7 @@ int main(int argc, const char * argv[]) {
             
             double distance = getDistance(sites[n].LAT,sites[n].LON,sites[to].LAT,sites[to].LON);
             fprintf(fp2, "%zu %zu %lf\n", n, to, distance);
+            fprintf(fp2, "%zu %zu %lf\n", to, n, distance);
         }
     }
     
