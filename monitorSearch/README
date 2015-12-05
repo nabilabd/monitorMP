@@ -1,0 +1,31 @@
+
+# Installation
+
+Once in the directory containing monitorSearch/monitorSearch/, run the following command:
+
+```
+make
+```
+This generates an executable `analyzer`.
+
+Alternatively, to both generate the executable as well as timing results, one can use the bash script 
+```
+sh commands.sh
+```
+
+Running this command generates a file `results.txt`, containing execution times for running each of four algorithms
+on one hundred pairs of nodes, and parallelized over three different thread counts.
+
+
+# USAGE
+
+The executable takes four arguments, and is run as follows:
+
+```
+./analyzer FILE_NAME SOURCE_ID DEST_ID NUM_THREADS
+```
+
+* FILE_NAME is the name of the file containing the text representation of a graph
+* SOURCE_ID is the ID number of the vertex which is to be the source node in the algorithms
+* DEST_ID is the ID number of the vertex which is to be the destination node in the algorithms
+* NUM_THREADS is the number of threads which the OMP algorithms are parallelized over
