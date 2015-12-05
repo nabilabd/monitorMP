@@ -42,25 +42,25 @@ int main(int argc, const char * argv[]) {
     
     for (int m=0; m < num_reps; m++) {
         begin = clock();
-        bf_dist = bellmanFord(graph, 10, 3);
+        bf_dist = bellmanFord(graph, sourceID, destID);
         end = clock();
         avg_times[0] += (double) (end - begin) / (num_reps * CLOCKS_PER_SEC);
         
         
         begin = clock();
-        dijk = dijkstra(graph, 10, 3);
+        dijk = dijkstra(graph, sourceID, destID);
         end = clock();
         avg_times[1] += (double) (end - begin) / (num_reps * CLOCKS_PER_SEC);
         
         
         begin = clock();
-        ompbf_dist = ompBellFord(graph, 10, 3, nthreads);
+        ompbf_dist = ompBellFord(graph, sourceID, destID, nthreads);
         end = clock();
         avg_times[2] += (double) (end - begin) / (num_reps * CLOCKS_PER_SEC);
         
         
         begin = clock();
-        omp_dijk_dist = ompBellFord(graph, 10, 3, nthreads);
+        omp_dijk_dist = ompBellFord(graph, sourceID, destID, nthreads);
         end = clock();
         avg_times[3] += (double) (end - begin) / (num_reps * CLOCKS_PER_SEC);
     }
@@ -68,9 +68,9 @@ int main(int argc, const char * argv[]) {
     // Print Results
     
     
-    printf("Type\tBF\tDK\tOMPBF\tOMPDK\n");
-    printf("Dist\t%.3f\t%.3f\t%.3f\t%.3f\n", bf_dist, dijk, ompbf_dist, omp_dijk_dist);
-    printf("Time\t%.5f\t%.5f\t%.5f\t%.5f\n", avg_times[0], avg_times[1], avg_times[2], avg_times[3]);
+//    printf("Type\tBF\tDK\tOMPBF\tOMPDK\n");
+    printf("Dist\t%.3f\t%.3f\t%.3f\t%.3f\t%zu\t%zu\t%d\n", bf_dist, dijk, ompbf_dist, omp_dijk_dist, sourceID, destID, nthreads);
+    printf("Time\t%.5f\t%.5f\t%.5f\t%.5f\t%zu\t%zu\t%d\n", avg_times[0], avg_times[1], avg_times[2], avg_times[3], sourceID, destID, nthreads);
     
     
     
