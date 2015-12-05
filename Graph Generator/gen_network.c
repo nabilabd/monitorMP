@@ -6,6 +6,25 @@
 //  Copyright © 2015 Henry Huray. All rights reserved.
 //
 
+/*
+
+This code takes a given file containing lat/lon coordinates of locations, 
+and generates an Erdos-Renyi graph where each pair of nodes is connected 
+with a probability specified by the user. 
+
+Note that the text format for the graph that this code generates is 
+slightly different than what is required for "analyzer" to be able to 
+read it. The only difference is that on the first line, the number of 
+subsequent lines in the file should follow the number of nodes in the graph. 
+So, if there are 10 lines in the file after the first line, and the graph 
+has seven nodes, then the first line should be changed to be: 
+
+7 10
+
+*/
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -74,7 +93,7 @@ int main(int argc, const char * argv[]) {
     FILE* fp2 = fopen(output_file, "w");
     
     // write number of nodes
-    fprintf(fp2, "%u\n", numNodes);
+    fprintf(fp2, "%u 188\n", numNodes);
     
     for (size_t n = 1; n < numNodes; n++) {
         
